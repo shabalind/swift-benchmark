@@ -13,23 +13,69 @@
 // limitations under the License.
 
 public struct BenchmarkState {
-    public let iterations: Int
     public let settings: BenchmarkSettings
-    var duration: Double
+    let iterations: Int
+    var startTime: UInt64 
+    var endTime: UInt64 
+    var measurements: [Double] 
 
     @inline(__always)
     init(iterations: Int, settings: BenchmarkSettings) {
         self.iterations = iterations
         self.settings = settings
-        self.duration = 0
+        self.startTime = 0
+        self.endTime = 0
+        self.measurements = []
+        self.measurements.reserveCapacity(iterations)
     }
 
     @inline(__always)
     public mutating func measure(f: () -> Void) {
-        var clock: BenchmarkClock = BenchmarkClock()
-        clock.recordStart()
+        start()
         f()
-        clock.recordEnd()
-        duration = Double(clock.elapsed)
+        end()
+    }
+
+    @inline(__always) 
+    mutating func reset() {
+        self.startTime = 0
+        self.endTime = 0
+    }
+
+    @inline(__always)
+    mutating func start() {
+        self.reset()
+        self.startTime = now()
+    }
+
+    @inline(__always)
+    mutating func end() {
+        let value = now()
+        if self.endTime == 0 {
+            self.endTime = value
+            record()
+        }
+    }
+
+    @inline(__always)
+    mutating func record() {
+        measurements.append(self.duration)
+    } 
+
+    @inline(__always)
+    var duration: Double {
+        return Double(self.endTime - self.startTime)
+    }
+
+    @inline(__always)
+    mutating func loop(_ benchmark: AnyBenchmark) {
+        for _ in 1...self.iterations {
+            reset()
+            benchmark.setUp()
+            start()
+            benchmark.run(&self)
+            end()
+            benchmark.tearDown()
+        }
     }
 }

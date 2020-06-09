@@ -51,8 +51,7 @@ public struct BenchmarkRunner {
         }
 
         reporter.report(running: benchmark.name, suite: suite.name)
-        var totalTime = BenchmarkClock()
-        totalTime.recordStart()
+        let totalStart = now()
 
         if let n = settings.warmupIterations {
             let _ = doNIterations(n, benchmark: benchmark, suite: suite, settings: settings)
@@ -66,9 +65,11 @@ public struct BenchmarkRunner {
                 benchmark: benchmark, suite: suite, settings: settings)
         }
 
-        totalTime.recordEnd()
+        let totalEnd = now()
+        let totalElapsed = totalEnd - totalStart
+
         reporter.report(
-            finishedRunning: benchmark.name, suite: suite.name, nanosTaken: totalTime.elapsed)
+            finishedRunning: benchmark.name, suite: suite.name, nanosTaken: totalElapsed)
 
         let result = BenchmarkResult(
             benchmarkName: benchmark.name,
@@ -124,6 +125,7 @@ public struct BenchmarkRunner {
         var n: Int = 1
 
         while true {
+            print("running \(n) times")
             measurements = doNIterations(n, benchmark: benchmark, suite: suite, settings: settings)
             if n != 1 && hasCollectedEnoughData(measurements, settings: settings) { break }
             n = predictNumberOfIterationsNeeded(measurements, settings: settings)
@@ -135,23 +137,7 @@ public struct BenchmarkRunner {
 
     func doNIterations(_ n: Int, benchmark: AnyBenchmark, suite: BenchmarkSuite, settings: BenchmarkSettings) -> [Double] {
         var state = BenchmarkState(iterations: n, settings: settings)
-        var measurements: [Double] = []
-        measurements.reserveCapacity(n)
-        var clock: BenchmarkClock = BenchmarkClock()
-
-        for _ in 1...n {
-            benchmark.setUp()
-            clock.recordStart()
-            benchmark.run(&state)
-            clock.recordEnd()
-            benchmark.tearDown()
-            if state.duration > 0 {
-                measurements.append(state.duration)
-            } else {
-                measurements.append(Double(clock.elapsed))
-            }
-        }
-
-        return measurements
+        state.loop(benchmark)
+        return state.measurements
     }
 }

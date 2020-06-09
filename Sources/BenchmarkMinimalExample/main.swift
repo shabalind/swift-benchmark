@@ -22,4 +22,11 @@ benchmark("measure noop") { state in
     }
 }
 
+benchmark("custom loop measure noop") { state in
+    for _ in 1...100 {
+        state.measure {
+        }
+    }
+}
+
 Benchmark.main()
