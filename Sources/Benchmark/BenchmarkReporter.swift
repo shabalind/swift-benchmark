@@ -26,6 +26,7 @@ struct PlainTextReporter<Target>: BenchmarkReporter where Target: TextOutputStre
         case time
         case standardDeviation = "std"
         case iterations
+        case warmup
     }
 
     typealias Row = [Column: String]
@@ -70,13 +71,16 @@ struct PlainTextReporter<Target>: BenchmarkReporter where Target: TextOutputStre
             let median = result.measurements.median
             let standardDeviation = result.measurements.std
 
-            rows.append([
+            let row: Row = [
                 .name: name,
                 .time: "\(median) ns",
                 .standardDeviation:
                     "± \(String(format: "%6.2f %%", (standardDeviation / median) * 100))",
                 .iterations: "\(result.measurements.count)",
-            ])
+                .warmup: "\(result.warmupMeasurements.sum)",
+            ]
+
+            rows.append(row)
         }
 
         let widths: [Column: Int] = Dictionary(
@@ -100,7 +104,7 @@ struct PlainTextReporter<Target>: BenchmarkReporter where Target: TextOutputStre
                 case _ where index == 0,
                     .name, .standardDeviation:
                     return string.rightPadding(toLength: width, withPad: " ")
-                case .time, .iterations:
+                case .time, .iterations, .warmup:
                     return string.leftPadding(toLength: width, withPad: " ")
                 }
             }
