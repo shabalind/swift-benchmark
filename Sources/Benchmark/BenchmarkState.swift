@@ -45,13 +45,13 @@ public struct BenchmarkState {
     }
 
     @inline(__always)
-    mutating func start() {
+    public mutating func start() {
         self.reset()
         self.startTime = now()
     }
 
     @inline(__always)
-    mutating func end() throws {
+    public mutating func end() throws {
         let value = now()
         if self.endTime == 0 {
             self.endTime = value
