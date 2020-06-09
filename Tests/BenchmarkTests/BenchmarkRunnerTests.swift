@@ -43,7 +43,7 @@ final class BenchmarkRunnerTests: XCTestCase {
         let suite = BenchmarkSuite(name: "Suite")
         suite.benchmark("noop") {}
         suite.benchmark("state measure noop") { state in
-            state.measure {}
+            try state.measure {}
         }
 
         var runner = BenchmarkRunner(

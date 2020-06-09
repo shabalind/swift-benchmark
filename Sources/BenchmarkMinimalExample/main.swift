@@ -18,13 +18,13 @@ benchmark("noop") {
 }
 
 benchmark("measure noop") { state in
-    state.measure {
+    try state.measure {
     }
 }
 
 benchmark("custom loop measure noop") { state in
-    for _ in 1...100 {
-        state.measure {
+    while true { 
+        try state.measure {
         }
     }
 }

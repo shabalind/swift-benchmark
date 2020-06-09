@@ -17,7 +17,12 @@ public func runTests(suites: [BenchmarkSuite]) {
     for suite in suites {
         for benchmark in suite.benchmarks {
             var state = BenchmarkState(iterations: 1, settings: BenchmarkSettings())
-            benchmark.run(&state)
+            do {
+                try benchmark.run(&state)
+            } catch is Termination {
+            } catch {
+                fatalError("Unexpected error: \(error).")
+            }
         }
     }
 }
@@ -33,7 +38,12 @@ public func makeTests<T>(_ type: T.Type, suites: [BenchmarkSuite]) -> [(String, 
             let closure: (T) -> () -> Void = { _ in
                 return {
                     var state = BenchmarkState(iterations: 1, settings: BenchmarkSettings())
-                    benchmark.run(&state)
+                    do {
+                        try benchmark.run(&state)
+                    } catch is Termination {
+                    } catch {
+                        fatalError("Unexpected error: \(error).")
+                    }
                     return
                 }
             }

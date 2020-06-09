@@ -125,7 +125,6 @@ public struct BenchmarkRunner {
         var n: Int = 1
 
         while true {
-            print("running \(n) times")
             measurements = doNIterations(n, benchmark: benchmark, suite: suite, settings: settings)
             if n != 1 && hasCollectedEnoughData(measurements, settings: settings) { break }
             n = predictNumberOfIterationsNeeded(measurements, settings: settings)
@@ -137,7 +136,12 @@ public struct BenchmarkRunner {
 
     func doNIterations(_ n: Int, benchmark: AnyBenchmark, suite: BenchmarkSuite, settings: BenchmarkSettings) -> [Double] {
         var state = BenchmarkState(iterations: n, settings: settings)
-        state.loop(benchmark)
+        do {
+            try state.loop(benchmark)
+        } catch is Termination {
+        } catch {
+            fatalError("Unexpected error: \(error).")
+        }
         return state.measurements
     }
 }

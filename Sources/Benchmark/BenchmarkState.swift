@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+struct Termination: Error {}
+
 public struct BenchmarkState {
     public let settings: BenchmarkSettings
     let iterations: Int
@@ -30,10 +32,10 @@ public struct BenchmarkState {
     }
 
     @inline(__always)
-    public mutating func measure(f: () -> Void) {
+    public mutating func measure(f: () -> Void) throws {
         start()
         f()
-        end()
+        try end()
     }
 
     @inline(__always) 
@@ -49,17 +51,21 @@ public struct BenchmarkState {
     }
 
     @inline(__always)
-    mutating func end() {
+    mutating func end() throws {
         let value = now()
         if self.endTime == 0 {
             self.endTime = value
-            record()
+            try record()
         }
     }
 
     @inline(__always)
-    mutating func record() {
-        measurements.append(self.duration)
+    mutating func record() throws {
+        if measurements.count <= iterations {
+            measurements.append(self.duration)
+        } else {
+            throw Termination()
+        }
     } 
 
     @inline(__always)
@@ -68,13 +74,13 @@ public struct BenchmarkState {
     }
 
     @inline(__always)
-    mutating func loop(_ benchmark: AnyBenchmark) {
+    mutating func loop(_ benchmark: AnyBenchmark) throws {
         for _ in 1...self.iterations {
             reset()
             benchmark.setUp()
             start()
-            benchmark.run(&self)
-            end()
+            try benchmark.run(&self)
+            try end()
             benchmark.tearDown()
         }
     }
