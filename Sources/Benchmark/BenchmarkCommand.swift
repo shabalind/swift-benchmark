@@ -19,10 +19,6 @@ internal struct BenchmarkCommand: ParsableCommand {
     @OptionGroup()
     var arguments: BenchmarkArguments
 
-    var settings: [BenchmarkSetting] {
-        return arguments.settings
-    }
-
     mutating func validate() throws {
         try arguments.validate()
     }

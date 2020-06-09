@@ -130,7 +130,7 @@ extension BenchmarkCommandTests {
         let settings: BenchmarkSettings
         do {
             parsed = try BenchmarkCommand.parse(arguments)
-            settings = BenchmarkSettings(parsed.settings)
+            settings = BenchmarkSettings(parsed.arguments.settings)
         } catch {
             let message = BenchmarkCommand.message(for: error)
             XCTFail("\"\(message)\" - \(error)", file: file, line: line)

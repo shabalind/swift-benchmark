@@ -14,7 +14,7 @@
 
 public func main(_ suites: [BenchmarkSuite]) {
     let command = BenchmarkCommand.parseOrExit()
-    main(suites, settings: command.settings)
+    main(suites, settings: command.arguments.settings)
 }
 
 public func main(_ suites: [BenchmarkSuite], settings: [BenchmarkSetting]) {
