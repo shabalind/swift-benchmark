@@ -52,11 +52,11 @@ public struct MinTime: BenchmarkSetting {
 public struct BenchmarkSettings {
     let settings: [String: Any]
 
-    init(_ settings: [[BenchmarkSetting]]) {
+    public init(_ settings: [[BenchmarkSetting]]) {
         self.init(Array(settings.joined()))
     }
 
-    init(_ settings: [BenchmarkSetting]) {
+    public init(_ settings: [BenchmarkSetting]) {
         var result: [String: BenchmarkSetting] = [:]
 
         for setting in settings {
@@ -71,7 +71,7 @@ public struct BenchmarkSettings {
         self.settings = settings
     }
 
-    subscript<T>(type: T.Type) -> T? {
+    public subscript<T>(type: T.Type) -> T? {
         get {
             let key = String(describing: type)
             if let value = settings[key] {
@@ -86,44 +86,24 @@ public struct BenchmarkSettings {
         }
     }
 
-    var iterations: Int? {
-        if let setting = self[Iterations.self] {
-            return setting.value
-        } else {
-            return nil
-        }
+    public var iterations: Int? {
+        return self[Iterations.self]?.value
     }
 
-    var maxIterations: Int? {
-        if let setting = self[MaxIterations.self] {
-            return setting.value
-        } else {
-            return nil
-        }
+    public var maxIterations: Int? {
+        return self[MaxIterations.self]?.value
     }
 
-    var warmupIterations: Int? {
-        if let setting = self[WarmupIterations.self] {
-            return setting.value
-        } else {
-            return nil
-        }
+    public var warmupIterations: Int? {
+        return self[WarmupIterations.self]?.value
     }
 
-    var filter: String? {
-        if let setting = self[Filter.self] {
-            return setting.value
-        } else {
-            return nil
-        }
+    public var filter: String? {
+        return self[Filter.self]?.value
     }
 
-    var minTime: Double? {
-        if let setting = self[MinTime.self] {
-            return setting.value
-        } else {
-            return nil
-        }
+    public var minTime: Double? {
+        return self[MinTime.self]?.value
     }
 }
 
