@@ -40,19 +40,19 @@ internal struct BenchmarkCommand: ParsableCommand {
         var result: [BenchmarkSetting] = []
 
         if let value = filter {
-            result.append(.filter(value))
+            result.append(Filter(value))
         }
         if let value = iterations {
-            result.append(.iterations(value))
+            result.append(Iterations(value))
         }
         if let value = warmupIterations {
-            result.append(.warmupIterations(value))
+            result.append(WarmupIterations(value))
         }
         if let value = minTime {
-            result.append(.minTime(seconds: value))
+            result.append(MinTime(seconds: value))
         }
         if let value = maxIterations {
-            result.append(.maxIterations(value))
+            result.append(MaxIterations(value))
         }
 
         return result
