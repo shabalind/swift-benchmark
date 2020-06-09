@@ -12,39 +12,39 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-public protocol BenchmarkSetting { }
+public protocol BenchmarkSetting {}
 
 public struct Iterations: BenchmarkSetting {
     public var value: Int
-    public init(_ value: Int) { 
+    public init(_ value: Int) {
         self.value = value
     }
 }
 
 public struct MaxIterations: BenchmarkSetting {
     public var value: Int
-    public init(_ value: Int) { 
+    public init(_ value: Int) {
         self.value = value
     }
 }
 
 public struct WarmupIterations: BenchmarkSetting {
     public var value: Int
-    public init(_ value: Int) { 
+    public init(_ value: Int) {
         self.value = value
     }
 }
 
 public struct Filter: BenchmarkSetting {
     public var value: String
-    public init(_ value: String) { 
+    public init(_ value: String) {
         self.value = value
     }
 }
 
 public struct MinTime: BenchmarkSetting {
     public var value: Double
-    public init(seconds value: Double) { 
+    public init(seconds value: Double) {
         self.value = value
     }
 }

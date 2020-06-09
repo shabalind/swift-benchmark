@@ -35,7 +35,7 @@ public struct BenchmarkArguments: ParsableArguments {
         help: "Maximum number of iterations to run when automatically detecting number iterations.")
     var maxIterations: Int?
 
-    public init() { }
+    public init() {}
 
     public var settings: [BenchmarkSetting] {
         var result: [BenchmarkSetting] = []
@@ -97,5 +97,3 @@ public struct BenchmarkArguments: ParsableArguments {
         return "Value provided via \(flag) must be a positive \(type)."
     }
 }
-
-
