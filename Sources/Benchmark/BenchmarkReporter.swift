@@ -77,7 +77,7 @@ struct PlainTextReporter<Target>: BenchmarkReporter where Target: TextOutputStre
                 .standardDeviation:
                     "± \(String(format: "%6.2f %%", (standardDeviation / median) * 100))",
                 .iterations: "\(result.measurements.count)",
-                .warmup: "\(result.warmupMeasurements.sum)",
+                .warmup: "\(result.warmupMeasurements.sum) ns",
             ]
 
             rows.append(row)
