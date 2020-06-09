@@ -145,8 +145,8 @@ public struct BenchmarkRunner {
             benchmark.run(&state)
             clock.recordEnd()
             benchmark.tearDown()
-            if state.measurements.count > 0 {
-                return state.measurements
+            if state.duration > 0 {
+                measurements.append(state.duration)
             } else {
                 measurements.append(Double(clock.elapsed))
             }

@@ -15,28 +15,21 @@
 public struct BenchmarkState {
     public let iterations: Int
     public let settings: BenchmarkSettings
-    var measurements: [Double]
+    var duration: Double
 
     @inline(__always)
     init(iterations: Int, settings: BenchmarkSettings) {
         self.iterations = iterations
         self.settings = settings
-        self.measurements = []
+        self.duration = 0
     }
 
     @inline(__always)
     public mutating func measure(f: () -> Void) {
-        var result: [Double] = []
-        result.reserveCapacity(iterations)
         var clock: BenchmarkClock = BenchmarkClock()
-
-        for _ in 1...iterations {
-            clock.recordStart()
-            f()
-            clock.recordEnd()
-            result.append(Double(clock.elapsed))
-        }
-
-        self.measurements = result
+        clock.recordStart()
+        f()
+        clock.recordEnd()
+        duration = Double(clock.elapsed)
     }
 }
