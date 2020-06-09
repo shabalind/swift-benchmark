@@ -67,6 +67,10 @@ public struct BenchmarkSettings {
         self.init(result)
     }
 
+    public init() {
+        self.init([:])
+    }
+
     init(_ settings: [String: BenchmarkSetting]) {
         self.settings = settings
     }

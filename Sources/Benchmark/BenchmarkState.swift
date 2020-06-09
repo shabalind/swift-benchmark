@@ -13,12 +13,14 @@
 // limitations under the License.
 
 public struct BenchmarkState {
-    var iterations: Int
+    public let iterations: Int
+    public let settings: BenchmarkSettings
     var measurements: [Double]
 
     @inline(__always)
-    init(iterations: Int) {
+    init(iterations: Int, settings: BenchmarkSettings) {
         self.iterations = iterations
+        self.settings = settings
         self.measurements = []
     }
 

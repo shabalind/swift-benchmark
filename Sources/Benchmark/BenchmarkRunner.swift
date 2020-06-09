@@ -55,12 +55,12 @@ public struct BenchmarkRunner {
         totalTime.recordStart()
 
         if let n = settings.warmupIterations {
-            let _ = doNIterations(n, benchmark: benchmark, suite: suite)
+            let _ = doNIterations(n, benchmark: benchmark, suite: suite, settings: settings)
         }
 
         var measurements: [Double] = []
         if let n = settings.iterations {
-            measurements = doNIterations(n, benchmark: benchmark, suite: suite)
+            measurements = doNIterations(n, benchmark: benchmark, suite: suite, settings: settings)
         } else {
             measurements = doAdaptiveIterations(
                 benchmark: benchmark, suite: suite, settings: settings)
@@ -124,7 +124,7 @@ public struct BenchmarkRunner {
         var n: Int = 1
 
         while true {
-            measurements = doNIterations(n, benchmark: benchmark, suite: suite)
+            measurements = doNIterations(n, benchmark: benchmark, suite: suite, settings: settings)
             if n != 1 && hasCollectedEnoughData(measurements, settings: settings) { break }
             n = predictNumberOfIterationsNeeded(measurements, settings: settings)
             assert(n > measurements.count, "Number of iterations should increase with every retry.")
@@ -133,8 +133,8 @@ public struct BenchmarkRunner {
         return measurements
     }
 
-    func doNIterations(_ n: Int, benchmark: AnyBenchmark, suite: BenchmarkSuite) -> [Double] {
-        var state = BenchmarkState(iterations: n)
+    func doNIterations(_ n: Int, benchmark: AnyBenchmark, suite: BenchmarkSuite, settings: BenchmarkSettings) -> [Double] {
+        var state = BenchmarkState(iterations: n, settings: settings)
         var measurements: [Double] = []
         measurements.reserveCapacity(n)
         var clock: BenchmarkClock = BenchmarkClock()
