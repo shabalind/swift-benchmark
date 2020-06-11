@@ -14,14 +14,16 @@
 
 import Benchmark
 
-benchmark("add string no capacity") {
+benchmark("add string no capacity") { state in
     var x1: String = ""
     for _ in 1...1000 {
         x1 += "hi"
+        state.increment(counter: "n")
     }
 }
 
-benchmark("add string reserved capacity") {
+benchmark("add string reserved capacity") { state in
+    state.increment(counter: "n")
     var x2: String = ""
     x2.reserveCapacity(2000)
     for _ in 1...1000 {
