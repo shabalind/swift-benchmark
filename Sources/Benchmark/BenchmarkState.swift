@@ -120,7 +120,7 @@ public struct BenchmarkState {
     /// Run the closure and report the result as a custom metric with 
     /// a given name.
     @inline(__always)
-    public mutating func measure<T>(name: String, f: () -> Void) {
+    public mutating func measure(name: String, f: () -> Void) {
         let start = now()
         f()
         let end = now()
