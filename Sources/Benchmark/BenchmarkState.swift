@@ -27,6 +27,9 @@ public struct BenchmarkState {
     /// A mapping from counters to their corresponding values.
     public var counters: [String: Double]
 
+    /// A mapping from counters to their corresponding values.
+    public var metrics: [String: [Double]]
+
     /// Number of iterations to be run. 
     public let iterations: Int
 
@@ -45,6 +48,7 @@ public struct BenchmarkState {
         self.measurements = []
         self.measurements.reserveCapacity(iterations)
         self.counters = [:]
+        self.metrics = [:]
         self.iterations = iterations
         self.settings = settings
     }
@@ -102,6 +106,17 @@ public struct BenchmarkState {
         try end()
     }
 
+    /// Run the closure and report the result as a custom metric with 
+    /// a given name.
+    @inline(__always)
+    public mutating func measure<T>(name: String, f: () throws -> T) throws -> T {
+        let start = now()
+        let result = try f()
+        let end = now()
+        record(metric: name, value: Double(end - start))
+        return result
+    }
+
     /// Increment a counter by a given value (with a default of 1).
     /// If counter has never been set before, it starts with zero as the
     /// initial value.
@@ -111,6 +126,15 @@ public struct BenchmarkState {
             counters[name] = oldValue + value
         } else {
             counters[name] = value
+        }
+    }
+
+    @inline(__always)
+    public mutating func record(metric name: String, value: Double) {
+        if metrics[name] == nil {
+            metrics[name] = [value]
+        } else {
+            metrics[name]!.append(value)
         }
     }
 }
