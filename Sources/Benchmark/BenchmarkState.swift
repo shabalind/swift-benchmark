@@ -109,9 +109,9 @@ public struct BenchmarkState {
     /// Run the closure and report the result as a custom metric with 
     /// a given name.
     @inline(__always)
-    public mutating func measure<T>(name: String, f: () throws -> T) throws -> T {
+    public mutating func measure<T>(name: String, f: () -> T) -> T {
         let start = now()
-        let result = try f()
+        let result = f()
         let end = now()
         record(metric: name, value: Double(end - start))
         return result
