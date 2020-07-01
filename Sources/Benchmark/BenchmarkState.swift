@@ -117,6 +117,16 @@ public struct BenchmarkState {
         return result
     }
 
+    /// Run the closure and report the result as a custom metric with 
+    /// a given name.
+    @inline(__always)
+    public mutating func measure<T>(name: String, f: () -> Void) {
+        let start = now()
+        f()
+        let end = now()
+        record(metric: name, value: Double(end - start))
+    }
+
     /// Increment a counter by a given value (with a default of 1).
     /// If counter has never been set before, it starts with zero as the
     /// initial value.
